@@ -1,6 +1,7 @@
 package interview.controller;
 
 import interview.model.Games;
+import interview.repository.CardGameRepository;
 import interview.repository.GamesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,18 +14,18 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/games")
 public class GamesController {
-    //get people in game
-    // start game
-    //end game
-    //get rank of people in game
+
     @Autowired
     private GamesRepository gamesRepository;
+    @Autowired
+    private CardGameRepository cardGameRepository;
 
-    @PostMapping("{game}/{player}")
-    public ResponseEntity<String> createGame(@PathVariable String player, @PathVariable String game) {
-        Games games = new Games(player, game);
+    @PostMapping("{gameTitle}/{player}")
+    public ResponseEntity<String> createGame(@PathVariable String player, @PathVariable String gameTitle) {
+        Games games = new Games(player, gameTitle);
         gamesRepository.save(games);
-        return new ResponseEntity<>(String.format("Created %s game: %s",game, games.getCardGame().get(0).getId()), HttpStatus.OK);
+        cardGameRepository.save(games.getCardGame().get(games.getCardGame().size()-1));
+        return new ResponseEntity<>(String.format("Created %s game: %s",gameTitle, games.getCardGame().get(0).getId()), HttpStatus.OK);
     }
 
     @DeleteMapping("{gameId}")
@@ -39,13 +40,13 @@ public class GamesController {
     @GetMapping()
     public ResponseEntity<String> getGame() {
         Map<String, Games>  games = gamesRepository.getGames();
-        if(games == null){
-            return new ResponseEntity<>("game not found.", HttpStatus.NOT_FOUND);
+        if(games == null || games.isEmpty()){
+            return new ResponseEntity<>("Game not found.", HttpStatus.NOT_FOUND);
         }
         String gameString = games.entrySet().stream()
-                .map(entry -> "Game ID: " + entry.getValue().getCardGame().get(0).getId() + ", Title: " + entry.getValue().getCardGame().get(0).getTitle())
+                .map(entry -> "\n Game ID: " + entry.getValue().getId() + ", Title: " + entry.getValue().getCardGame().get(0).getTitle())
                 .collect(Collectors.joining("\n"));
-        return new ResponseEntity<>(String.format("List Games:", gameString), HttpStatus.OK);
+        return new ResponseEntity<>(String.format("List Games: %s", gameString), HttpStatus.OK);
     }
 
 }

@@ -56,7 +56,6 @@ public class GamesTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         }
 
-
     private Games games(){
         return new Games("JohnDoe","Poker");
     }

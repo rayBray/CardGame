@@ -49,7 +49,7 @@ public class CardPlayerTests {
         when(cardPlayerRepository.findById(CardPlayer.getId())).thenReturn(cardPlayer);
         CardGame cardGame = cardGame();
         when(cardGameRepository.findById(anyString())).thenReturn(cardGame);
-        mockMvc.perform(post("/cardPlayer/{gameId}/{cardPlayerName}", cardPlayer.getGameId(), cardPlayer.getName()))
+        mockMvc.perform(post("/card_player/{gameId}/{cardPlayerName}", cardPlayer.getGameId(), cardPlayer.getName()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.format("Created %s", cardPlayer)))
                 .andReturn();
@@ -59,7 +59,7 @@ public class CardPlayerTests {
     public void testGetCardPlayer() throws Exception {
         CardPlayer cardPlayer = cardPlayer();
         when(cardPlayerRepository.findById(CardPlayer.getId())).thenReturn(cardPlayer);
-        mockMvc.perform(get("/cardPlayer/{cardPlayerId}", cardPlayer.getId()))
+        mockMvc.perform(get("/card_player/{cardPlayerId}", cardPlayer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(cardPlayer.toString()))
                 .andReturn();
@@ -73,7 +73,7 @@ public class CardPlayerTests {
         when(cardGameRepository.findById(anyString())).thenReturn(cardGame);
         cardGame.addCardPlayer(cardPlayer);
 
-        mockMvc.perform(delete("/cardPlayer/{gameId}/{cardPlayerId}", cardGame.getId(), cardPlayer.getId()))
+        mockMvc.perform(delete("/card_player/{gameId}/{cardPlayerId}", cardGame.getId(), cardPlayer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.format("Removed Card Player: \n  %s  ", cardPlayer)))
                 .andReturn();
@@ -81,7 +81,7 @@ public class CardPlayerTests {
     }
 
     @Test
-    public void testGetCardPlayerHand_WithCards() throws Exception {
+    public void testGetCardPlayerHand() throws Exception {
         CardPlayer cardPlayer = cardPlayer();
         cardPlayer.appendToHand(new Card("Hearts", "2",2));
         cardPlayer.appendToHand(new Card("Hearts", "3",3));
@@ -89,7 +89,7 @@ public class CardPlayerTests {
 
         when(cardPlayerRepository.findById(anyString())).thenReturn(cardPlayer);
 
-        mockMvc.perform(get("/cardPlayer/{cardPlayerId}/currentHand", cardPlayer.getId()))
+        mockMvc.perform(get("/card_player/{cardPlayerId}/current_hand", cardPlayer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("cardPlayer current hand: 2 of Hearts, 3 of Hearts, 4 of Hearts"))
                 .andReturn();
@@ -101,7 +101,7 @@ public class CardPlayerTests {
     public void testGetCardPlayerScore() throws Exception {
         CardPlayer cardPlayer =  cardPlayer();
         when(cardPlayerRepository.findById(anyString())).thenReturn(cardPlayer);
-        mockMvc.perform(get("/cardPlayer/{cardPlayerId}/score", cardPlayer.getId()))
+        mockMvc.perform(get("/card_player/{cardPlayerId}/score", cardPlayer.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.format("Card Player %s score: %s", cardPlayer.getName(), cardPlayer.getScore())))
                 .andReturn();

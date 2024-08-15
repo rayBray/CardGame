@@ -1,0 +1,23 @@
+image: maven:3.8.4-jdk-11
+
+stages:
+  - build
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml"
+
+cache:
+  paths:
+    - .m2/repository
+
+before_script:
+  - mvn --version
+
+build:
+  stage: build
+  script:
+    - mvn clean install
+  artifacts:
+    reports:
+      junit:
+        - target/surefire-reports/*.xml

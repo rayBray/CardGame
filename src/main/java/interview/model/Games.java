@@ -11,7 +11,6 @@ public class Games {
     public Games(String player, String gameTitle) {
         this.id = UUID.randomUUID().toString();
         cardGame.add(new CardGame(gameTitle, player));
-
     }
 
     public String getId() {

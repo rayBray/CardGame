@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/cardPlayer")
+@RequestMapping("/card_player")
 public class CardPlayerController {
 
     @Autowired
@@ -48,7 +48,7 @@ public class CardPlayerController {
         return new ResponseEntity<>(String.format("Removed Card Player: \n  %s  ", cardPlayer), HttpStatus.OK);
     }
 
-    @PostMapping("{cardPlayerId}/pickUpCard")
+    @PutMapping("{cardPlayerId}/pick_up_card")
     public ResponseEntity<String> pickUpCard(@PathVariable String cardPlayerId){
         CardPlayer cardPlayer = cardPlayerRepository.findById(cardPlayerId);
 
@@ -59,14 +59,12 @@ public class CardPlayerController {
         if (cardGame == null) {
             return new ResponseEntity<>("game not found.", HttpStatus.NOT_FOUND);
         }
-
         Card card = cardGame.getDeck().takeCard();
         cardPlayer.appendToHand(card);
-
         return  new ResponseEntity<>(String.format("You picked up a %s of %s",card.getRank(),card.getSuit()), HttpStatus.OK);
     }
 
-    @GetMapping("{cardPlayerId}/currentHand")
+    @GetMapping("{cardPlayerId}/current_hand")
     public ResponseEntity<String> getCardPlayerHand(@PathVariable String cardPlayerId){
         CardPlayer cardPlayer = cardPlayerRepository.findById(cardPlayerId);
         if (cardPlayer == null) {
@@ -76,7 +74,7 @@ public class CardPlayerController {
             return new ResponseEntity<>("cardPlayer has no cards", HttpStatus.BAD_REQUEST);
         }
         String cards = cardPlayer.getHand().stream()
-                .map(Card::toString) // Convert each Card to a String using its toString method
+                .map(Card::toString)
                 .collect(Collectors.joining(", "));
 
         return new ResponseEntity<>("cardPlayer current hand: "+ cards, HttpStatus.OK);

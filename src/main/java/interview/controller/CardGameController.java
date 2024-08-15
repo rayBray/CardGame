@@ -20,7 +20,7 @@ public class CardGameController {
     @Autowired
     private CardGameRepository cardGameRepository;
 
-    @PostMapping("/{gameId}/addDeck")
+    @PostMapping("/{gameId}/add_deck")
     public ResponseEntity<String> addDeck(@PathVariable String gameId) {
         CardGame cardGame = cardGameRepository.findById(gameId);
         if(gameId == null){
@@ -30,7 +30,7 @@ public class CardGameController {
         return new ResponseEntity<>("Deck added, current number of cards in deck: "+ cardGame.getDeck().getCards().size(), HttpStatus.OK);
     }
 
-    @PostMapping("/{gameId}/shuffle")
+    @PutMapping("/{gameId}/shuffle")
     public ResponseEntity<String> shuffleDeck(@PathVariable String gameId) {
         CardGame cardGame = cardGameRepository.findById(gameId);
         if(gameId == null){
@@ -43,11 +43,12 @@ public class CardGameController {
     @GetMapping("/{gameId}/remaining_cards")
     public ResponseEntity<String> remainingCards(@PathVariable String gameId) {
         CardGame cardGame = cardGameRepository.findById(gameId);
-        if(gameId == null){
+        if(cardGame == null){
             return new ResponseEntity<>("game not found.", HttpStatus.NOT_FOUND);
         }
         GameService gameService = new GameService();
-        return new ResponseEntity<>(gameService.getCardCounts(cardGame.getDeck()), HttpStatus.OK);
+        String undealtCardCounts = gameService.getCardCounts(cardGame.getDeck());
+        return new ResponseEntity<>("Remaining cards:\n"+undealtCardCounts, HttpStatus.OK);
 
     }
 

@@ -17,7 +17,6 @@ public class GameService {
 
 
     public String getCardCounts(Deck deck) {
-
         Map<String, Map<String, Long>>  cardCounts = countCardsBySuits(deck);
         StringBuilder result = new StringBuilder();
 
@@ -25,13 +24,11 @@ public class GameService {
             if (cardCounts.containsKey(suit)) {
                 result.append(suit).append(": ");
                 Map<String, Long> rankCounts = cardCounts.get(suit);
-
                 for (String rank : rankOrder) {
                     if (rankCounts.containsKey(rank)) {
                         result.append(rankCounts.get(rank)).append(" ").append(rank).append(", ");
                     }
                 }
-                // Remove trailing comma and space
                 if (result.length() > 2) {
                     result.setLength(result.length() - 2);
                 }
@@ -46,7 +43,6 @@ public class GameService {
         Map<String, Long> totalCardCounts = deck.getCards().stream()
                 .collect(Collectors.groupingBy(Card::getSuit, Collectors.counting()));
 
-        // Count undealt cards by suit
         Map<String, Long> undealtCardCounts = deck.getCards().stream()
                 .collect(Collectors.groupingBy(Card::getSuit, Collectors.counting()));
 
