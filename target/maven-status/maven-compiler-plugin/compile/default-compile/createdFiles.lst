@@ -1,0 +1,13 @@
+interview/controller/CardPlayerController.class
+interview/model/CardPlayer.class
+interview/repository/GamesRepository.class
+interview/controller/GamesController.class
+interview/model/Deck.class
+interview/model/Games.class
+interview/controller/CardGameController.class
+interview/repository/CardGameRepository.class
+interview/model/CardGame.class
+interview/repository/CardPlayerRepository.class
+interview/CardGameApplication.class
+interview/model/Card.class
+interview/service/GameService.class
